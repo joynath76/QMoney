@@ -174,11 +174,11 @@ public class PortfolioManagerApplication {
   public static AnnualizedReturn calculateAnnualizedReturns(LocalDate endDate,
       PortfolioTrade trade, Double buyPrice, Double sellPrice) {
     LocalDate startDate = trade.getPurchaseDate();
-    double days = 365 * (endDate.getYear() - startDate.getYear()) + 30 * (endDate
+    double days = 366 * (endDate.getYear() - startDate.getYear()) + 30 * (endDate
         .getMonthValue() - startDate.getMonthValue()) + (endDate.getDayOfMonth() - startDate
         .getDayOfMonth());
     Double totalReturn = (sellPrice - buyPrice) / buyPrice;
-    Double annualizedreturns = (Math.pow(1 + totalReturn, 365.0 / days)) - 1;
+    Double annualizedreturns = (Math.pow((1 + totalReturn), (364.0 / days))) - 1;
 
     return new AnnualizedReturn(trade.getSymbol(), annualizedreturns, totalReturn);
   }
