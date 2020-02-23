@@ -53,8 +53,8 @@ class PortfolioManagerApplicationTest {
     //then
     List<String> symbols = result.stream().map(AnnualizedReturn::getSymbol)
         .collect(Collectors.toList());
-    Assertions.assertEquals(0.814, result.get(0).getAnnualizedReturn(), 0.01);
-    Assertions.assertEquals(0.584, result.get(1).getAnnualizedReturn(), 0.01);
+    Assertions.assertEquals(0.826, result.get(0).getAnnualizedReturn(), 0.01);
+    Assertions.assertEquals(0.588, result.get(1).getAnnualizedReturn(), 0.01);
     Assertions.assertEquals(0.33, result.get(2).getAnnualizedReturn(),0.01);
     Assertions.assertEquals(Arrays.asList(new String[]{"AAPL", "MSFT", "GOOGL"}), symbols);
 
@@ -75,7 +75,7 @@ class PortfolioManagerApplicationTest {
     AnnualizedReturn returns = PortfolioManagerApplication
         .calculateAnnualizedReturns(LocalDate.parse("2019-12-12"),
         trade, 1054.00, 1348.00);
-    Assertions.assertEquals(returns.getAnnualizedReturn(), 0.298, 0.001);
+    Assertions.assertEquals(returns.getAnnualizedReturn(), 0.302, 0.001);
   }
 
   @Test
