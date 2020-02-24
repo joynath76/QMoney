@@ -13,6 +13,7 @@ import java.io.IOException;
 import java.net.URISyntaxException;
 import java.nio.file.Paths;
 import java.time.LocalDate;
+import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
@@ -174,11 +175,9 @@ public class PortfolioManagerApplication {
   public static AnnualizedReturn calculateAnnualizedReturns(LocalDate endDate,
       PortfolioTrade trade, Double buyPrice, Double sellPrice) {
     LocalDate startDate = trade.getPurchaseDate();
-    double days = 366 * (endDate.getYear() - startDate.getYear()) + 30 * (endDate
-        .getMonthValue() - startDate.getMonthValue()) + (endDate.getDayOfMonth() - startDate
-        .getDayOfMonth());
+    double days = ChronoUnit.DAYS.between(startDate, endDate);
     Double totalReturn = (sellPrice - buyPrice) / buyPrice;
-    Double annualizedreturns = (Math.pow((1 + totalReturn), (364.0 / days))) - 1;
+    Double annualizedreturns = (Math.pow((1 + totalReturn), (365.0 / days))) - 1;
 
     return new AnnualizedReturn(trade.getSymbol(), annualizedreturns, totalReturn);
   }
