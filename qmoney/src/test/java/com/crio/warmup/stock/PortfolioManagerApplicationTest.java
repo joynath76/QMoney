@@ -53,7 +53,7 @@ class PortfolioManagerApplicationTest {
     //then
     List<String> symbols = result.stream().map(AnnualizedReturn::getSymbol)
         .collect(Collectors.toList());
-    Assertions.assertEquals(0.826, result.get(0).getAnnualizedReturn(), 0.01);
+    Assertions.assertEquals(0.813, result.get(0).getAnnualizedReturn(), 0.01);
     Assertions.assertEquals(0.584, result.get(1).getAnnualizedReturn(), 0.01);
     Assertions.assertEquals(0.33, result.get(2).getAnnualizedReturn(),0.01);
     Assertions.assertEquals(Arrays.asList(new String[]{"AAPL", "MSFT", "GOOGL"}), symbols);
