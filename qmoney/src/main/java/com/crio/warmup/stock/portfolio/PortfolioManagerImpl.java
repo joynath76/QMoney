@@ -33,8 +33,10 @@ public class PortfolioManagerImpl implements PortfolioManager {
 
 
   RestTemplate restTemplate = new RestTemplate();
+  
   // Caution: Do not delete or modify the constructor, or else your build will break!
   // This is absolutely necessary for backward compatibility
+  
   protected PortfolioManagerImpl(RestTemplate restTemplate) {
     this.restTemplate = restTemplate;
   }
