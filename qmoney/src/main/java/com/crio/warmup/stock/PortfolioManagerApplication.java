@@ -20,7 +20,6 @@ import java.util.Collections;
 import java.util.List;
 import java.util.UUID;
 import java.util.logging.Logger;
-
 import org.apache.logging.log4j.ThreadContext;
 import org.springframework.web.client.RestTemplate;
 
@@ -64,7 +63,7 @@ public class PortfolioManagerApplication {
         .getResource(filename).toURI()).toFile();
   }
 
-  private static ObjectMapper getObjectMapper() {
+  public static ObjectMapper getObjectMapper() {
     ObjectMapper objectMapper = new ObjectMapper();
     objectMapper.registerModule(new JavaTimeModule());
     return objectMapper;
@@ -128,6 +127,7 @@ public class PortfolioManagerApplication {
   //  startDate and endDate are already calculated in module2
   //  using the function you just wrote #calculateAnnualizedReturns
   //  Return the list of AnnualizedReturns sorted by annualizedReturns in descending order.
+
 
 
 
@@ -264,7 +264,7 @@ public class PortfolioManagerApplication {
 
   public static List<AnnualizedReturn> mainCalculateReturnsAfterRefactor(String[] args)
       throws Exception {
-    String file = args[0];
+    File file = resolveFileFromResources(args[0]);
     LocalDate endDate = LocalDate.parse(args[1]);
     PortfolioTrade[] portfolioTrades = getObjectMapper().readValue(file, PortfolioTrade[].class);
     PortfolioManager portfolioManager = PortfolioManagerFactory

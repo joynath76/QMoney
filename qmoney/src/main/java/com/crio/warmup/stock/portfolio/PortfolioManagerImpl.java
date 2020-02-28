@@ -1,6 +1,9 @@
 
 package com.crio.warmup.stock.portfolio;
 
+import static java.time.temporal.ChronoUnit.DAYS;
+import static java.time.temporal.ChronoUnit.SECONDS;
+
 import com.crio.warmup.stock.PortfolioManagerApplication;
 import com.crio.warmup.stock.dto.AnnualizedReturn;
 import com.crio.warmup.stock.dto.Candle;
@@ -9,23 +12,30 @@ import com.crio.warmup.stock.dto.TiingoCandle;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-
+import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import java.time.LocalDate;
+import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
-
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.Future;
+import java.util.concurrent.TimeUnit;
+import java.util.stream.Collectors;
 import org.springframework.web.client.RestTemplate;
 
 public class PortfolioManagerImpl implements PortfolioManager {
 
 
-  RestTemplate restTemplate = new RestTemplate();
 
+  RestTemplate restTemplate = new RestTemplate();
   // Caution: Do not delete or modify the constructor, or else your build will break!
   // This is absolutely necessary for backward compatibility
-  public PortfolioManagerImpl(RestTemplate restTemplate) {
+  protected PortfolioManagerImpl(RestTemplate restTemplate) {
     this.restTemplate = restTemplate;
   }
 
@@ -64,13 +74,14 @@ public class PortfolioManagerImpl implements PortfolioManager {
       throws JsonProcessingException {
     String url = buildUri(symbol, from, to);
     String result = restTemplate.getForObject(url, String.class);
-    return Arrays.asList(new ObjectMapper().readValue(result, TiingoCandle[].class));
+    TiingoCandle[] data = PortfolioManagerApplication
+        .getObjectMapper().readValue(result, TiingoCandle[].class);
+    return Arrays.asList(data);
   }
 
   protected String buildUri(String symbol, LocalDate startDate, LocalDate endDate) {
-       String uriTemplate = "https:api.tiingo.com/tiingo/daily/$SYMBOL/prices?"
-            + "startDate=$STARTDATE&endDate=$ENDDATE&token=7a3b3f7b9628373e7b858b51a3ce0f17fde30d46";
-    return uriTemplate;
+    String url = "https://api.tiingo.com/tiingo/daily/" + symbol + "/prices?startDate=" + startDate + "&endDate=" + endDate + "&token=7a3b3f7b9628373e7b858b51a3ce0f17fde30d46";
+    return url;
   }
 
   @Override
@@ -93,8 +104,19 @@ public class PortfolioManagerImpl implements PortfolioManager {
             .getAnnualizedReturn()) {
           Collections.swap(annualizedReturns, j, j + 1);
         }
-      }
     }
+  }
     return annualizedReturns;
   }
+
+
+
+
+  private Comparator<AnnualizedReturn> getComparator() {
+    return Comparator.comparing(AnnualizedReturn::getAnnualizedReturn).reversed();
+  }
+
+
+
+
 }
